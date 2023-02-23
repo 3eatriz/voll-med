@@ -19,7 +19,7 @@ public record DadosCadastroPaciente(
     String telefone, 
     
     @NotBlank
-    @Pattern(regexp = "\\d{11}")
+    @Pattern(regexp = "\\d{3}\\.?\\d{3}\\.?\\d{3}\\-?\\d{2}")
     String cpf, 
     
     @NotNull
