@@ -55,4 +55,11 @@ public class PacienteController {
         var paciente = repository.getReferenceById(id);
         paciente.desativar();
     }
+
+    @PutMapping("/{id}")
+    @Transactional
+    public void reativar(@PathVariable Long id){
+        var paciente = repository.getReferenceById(id);
+        paciente.reativar();
+    }
 }
