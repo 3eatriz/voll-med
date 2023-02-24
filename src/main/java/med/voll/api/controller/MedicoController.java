@@ -54,5 +54,12 @@ public class MedicoController {
         //exclusão lógica (só desativa e não apaga do BD)
         var medico = repository.getReferenceById(id);
         medico.desativar();
-    }    
+    }
+    
+    @PutMapping("/{id}")
+    @Transactional
+    public void reativar(@PathVariable Long id){
+        var medico = repository.getReferenceById(id);
+        medico.reativar();
+    }
 }
