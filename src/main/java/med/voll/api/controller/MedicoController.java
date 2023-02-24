@@ -54,5 +54,5 @@ public class MedicoController {
         //exclusão lógica (só desativa e não apaga do BD)
         var medico = repository.getReferenceById(id);
         medico.desativar();
-    }
+    }    
 }

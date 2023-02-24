@@ -36,7 +36,7 @@ public class PacienteController {
 
     @GetMapping
     public Page<DadosListagemPaciente> listar(@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao){
-        return repository.findAll(paginacao).map(DadosListagemPaciente::new);
+        return repository.findAllByAtivoTrue(paginacao).map(DadosListagemPaciente::new);
     }
 
     @PutMapping
@@ -52,5 +52,7 @@ public class PacienteController {
         //repository.deleteById(id); para deletar de verdade
 
         //exclusão lógica (só desativa e não apaga do BD)
+        var paciente = repository.getReferenceById(id);
+        paciente.desativar();
     }
 }
