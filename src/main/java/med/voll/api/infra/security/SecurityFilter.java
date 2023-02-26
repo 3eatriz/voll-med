@@ -3,6 +3,10 @@ package med.voll.api.infra.security;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextHolderStrategy;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -10,9 +14,13 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import med.voll.api.domain.usuario.UsuarioRepositoy;
 
 @Component
 public class SecurityFilter extends OncePerRequestFilter{
+
+    @Autowired
+    private UsuarioRepositoy repository;
 
     @Autowired
     private TokenService tokenService;
@@ -23,8 +31,13 @@ public class SecurityFilter extends OncePerRequestFilter{
             
                 var tokenJWT = recuperarToken(request);
                 
-                var subject = tokenService.getSubject(tokenJWT);
-                System.out.println(subject);
+                if(tokenJWT != null){
+                    var subject = tokenService.getSubject(tokenJWT);
+                    var usuario = repository.findByLogin(subject);
+
+                    var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
 
                 filterChain.doFilter(request, response);
     }
@@ -32,10 +45,9 @@ public class SecurityFilter extends OncePerRequestFilter{
     private String recuperarToken(HttpServletRequest request) {
         var authrizationHeader = request.getHeader("Authorization");
 
-        if(authrizationHeader == null){
-            throw new RuntimeException("Token JWT não enviado no cabeçalho Authorization");
-        }
-
-        return authrizationHeader.replace("Bearer ", "");
+        if(authrizationHeader != null){
+            return authrizationHeader.replace("Bearer ", "");
+        }  
+        return null;      
     }
 }
