@@ -1,6 +1,6 @@
 package med.voll.api.domain.consulta;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -37,5 +37,5 @@ public class Consulta {
     @JoinColumn(name = "paciente_id")
     private Paciente paciente;
 
-    private LocalDate data;
+    private LocalDateTime data;
 }
