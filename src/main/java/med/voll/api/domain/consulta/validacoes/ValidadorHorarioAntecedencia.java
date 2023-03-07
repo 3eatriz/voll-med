@@ -1,7 +1,7 @@
 package med.voll.api.domain.consulta.validacoes;
 
 import java.time.Duration;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Component;
 
@@ -13,7 +13,7 @@ public class ValidadorHorarioAntecedencia implements ValidadorAgendamentoDeConsu
     
     public void validar(DadosAgendamentoConsulta dados){
         var dataConsulta = dados.data();
-        var agora = LocalDate.now();
+        var agora = LocalDateTime.now();
         
         var diferencaMinutos = Duration.between(agora, dataConsulta).toMinutes();
 
