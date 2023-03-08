@@ -7,7 +7,8 @@ import org.springframework.stereotype.Service;
 
 import jakarta.validation.Valid;
 import med.voll.api.domain.ValidacaoException;
-import med.voll.api.domain.consulta.validacoes.ValidadorAgendamentoDeConsulta;
+import med.voll.api.domain.consulta.validacoes.agendamento.ValidadorAgendamentoDeConsulta;
+import med.voll.api.domain.consulta.validacoes.cancelamento.ValidadorCancelamentoDeConsulta;
 import med.voll.api.domain.medico.Medico;
 import med.voll.api.domain.medico.MedicoRepository;
 import med.voll.api.domain.paciente.PacienteRepository;
@@ -24,6 +25,8 @@ public class ConsultaService {
 
     @Autowired
     private List<ValidadorAgendamentoDeConsulta> validadores;
+    @Autowired
+    private List<ValidadorCancelamentoDeConsulta> validadoresCancelamento;
 
     public DadosDetalhamentoConsulta agendar(DadosAgendamentoConsulta dados){
 
@@ -64,11 +67,13 @@ public class ConsultaService {
     }
 
 
-    public void deletar(@Valid DadosCancelamentoConsulta dados) {
-        if(!consultaRepository.existsById(dados.idConsulta())){
+    public void cancelar(DadosCancelamentoConsulta dados) {
+        if (!consultaRepository.existsById(dados.idConsulta())) {
             throw new ValidacaoException("Id da consulta informado não existe!");
         }
-
+    
+        validadoresCancelamento.forEach(v -> v.validar(dados));
+    
         var consulta = consultaRepository.getReferenceById(dados.idConsulta());
         consulta.cancelar(dados.motivo());
     }
