@@ -19,20 +19,20 @@ import med.voll.api.domain.consulta.DadosCancelamentoConsulta;
 @RequestMapping("consultas")
 @SecurityRequirement(name = "bearer-key")
 public class ConsultaController {
-    
+
     @Autowired
     private ConsultaService agenda;
 
     @PostMapping
     @Transactional
-    public ResponseEntity agendar(@RequestBody @Valid DadosAgendamentoConsulta dados){
+    public ResponseEntity agendar(@RequestBody @Valid DadosAgendamentoConsulta dados) {
         var dto = agenda.agendar(dados);
         return ResponseEntity.ok(dto);
     }
 
     @DeleteMapping
     @Transactional
-    public ResponseEntity cancelar(@RequestBody @Valid DadosCancelamentoConsulta dados){
+    public ResponseEntity cancelar(@RequestBody @Valid DadosCancelamentoConsulta dados) {
         agenda.cancelar(dados);
         return ResponseEntity.noContent().build();
     }
